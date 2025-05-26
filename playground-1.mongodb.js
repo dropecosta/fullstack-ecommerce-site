@@ -10,9 +10,6 @@ const MONGODB_USER = '';
 const MONGODB_PASSWORD = '';
 const uri = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@cluster0.af7ycek.mongodb.net/?retryWrites=true&w=majority`;
 
-// require('dotenv').config()
-// const uri = `mongodb+srv://${process.env.NEXT_PUBLIC_MONGODB_USER}:${process.env.NEXT_PUBLIC_MONGODB_PASSWORD}@…`
-
 
     // Create a new MongoClient
     const client = new MongoClient(uri, {
