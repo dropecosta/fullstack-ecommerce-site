@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ecommerce Next.js
 
-## Getting Started
+> A full-featured online store built with Next.js 13, React, and MongoDB.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Table of Contents
+
+- [About](#about)
+- [Features](#features)
+- [Technologies](#technologies)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Environment Variables](#environment-variables)
+- [Available Scripts](#available-scripts)
+- [Project Structure](#project-structure)
+- [API Reference](#api-reference)
+
+---
+
+## About
+
+This project is an ecommerce application built with **Next.js 13** (App Router), **React**, and **TailwindCSS**, using **MongoDB Atlas** as the database. The app includes a product catalog, item detail pages, a dynamic shopping cart, and RESTful API endpoints.
+
+## Features
+
+- Product listing and detail views
+- Add and remove items from the cart
+- Persistent cart stored in the database
+- CRUD operations for products (via API)
+- Dynamic and client-side rendering for real-time interactions
+- Error handling in endpoints with user feedback
+
+## Technologies
+
+- Next.js 13 (App Router)
+- React 18+
+- TailwindCSS
+- MongoDB Atlas
+- TypeScript
+- ESLint / Prettier
+
+## Prerequisites
+
+- Node.js v18+ installed
+- MongoDB Atlas account and cluster
+
+## Installation
+
+1. Clone the repository:
+   ```powershell
+   git clone https://github.com/your-username/your-repo.git
+   cd your-repo
+   ```
+2. Install dependencies:
+   ```powershell
+   npm install
+   ```
+
+## Environment Variables
+
+Copy `.env.local.example` to `.env.local` and set the following variables:
+
+```dotenv
+MONGODB_USER=<Your MongoDB user>
+MONGODB_PASSWORD=<Your MongoDB password>
+MONGODB_URI=<Your full connection string or cluster URL>
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Available Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+In the project directory, you can run:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev`  
+  Starts the development server at http://localhost:3000
 
-## Learn More
+- `npm run build`  
+  Builds the application for production
 
-To learn more about Next.js, take a look at the following resources:
+- `npm start`  
+  Starts the production server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `npm run lint`  
+  Runs ESLint to check for code style issues
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```text
+app/
+├─ api/               # RESTful API endpoints
+│  ├─ products/       # Product CRUD operations
+│  └─ users/[id]/cart # Cart endpoints
+├─ cart/              # Shopping cart pages
+├─ products/          # Product listing and detail pages
+├─ components/        # Reusable components
+├─ db.ts              # MongoDB connection
+└─ globals.css        # Global styles
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+public/               # Static assets (images, icons)
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## API Reference
+
+### Products
+
+- `GET /api/products`  
+  Returns a list of all products.
+
+- `GET /api/products/:id`  
+  Returns the details of a single product by ID.
+
+- `DELETE /api/products/:id`  
+  Deletes a product and cascades removal from carts.
+
+### User Cart
+
+- `GET /api/users/:id/cart`  
+  Retrieves items in the user’s cart.
+
+- `POST /api/users/:id/cart`  
+  Adds a product to the cart.  
+  ```json
+  { "productId": "<product ID>" }
+  ```
+
+- `DELETE /api/users/:id/cart`  
+  Removes a product from the cart.  
+  ```json
+  { "productId": "<product ID>" }
+  ```
+
+
+Developed with 🧡 by **Pedro Reis**  
+📧 dropecosta@gmail.com  
+[LinkedIn](https://www.linkedin.com/in/dropecosta/) | [GitHub](https://github.com/dropecosta)

@@ -9,6 +9,7 @@ export default function ProductsList({ products, initialCartProducts = [] }: { p
   const [cartProducts, setCartProducts] = useState(initialCartProducts)
   
   async function addToCart(productId: string) {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     const response = await fetch('/api/users/2/cart', {
       method: 'POST',
       body: JSON.stringify({
@@ -21,6 +22,24 @@ export default function ProductsList({ products, initialCartProducts = [] }: { p
     const updatedCartProducts = await response.json();
     setCartProducts(updatedCartProducts);
   }
+
+  async function removeFromCart(productId: string) {
+    const response = await fetch('/api/users/2/cart', {
+      method: 'DELETE',
+      body: JSON.stringify({
+        productId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    const updatedCartProducts = await response.json();
+    setCartProducts(updatedCartProducts);
+  }
+
+  function productIsInCart(productId: string) {
+    return cartProducts.some(cp => cp.id === productId);
+  }
   
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
@@ -28,9 +47,9 @@ export default function ProductsList({ products, initialCartProducts = [] }: { p
         <Link
           key={product.id}
           href={`/products/${product.id}`}
-          className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition duration-300"
+          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 hover:shadow-lg transition duration-300"
         >
-          <div className="flex justify-center mb-4 h-48 relative"> 
+          <div className="flex justify-center mb-4 h-48 relative">
             <Image
               src={'/' + product.imageUrl}
               alt="Product image"
@@ -39,8 +58,23 @@ export default function ProductsList({ products, initialCartProducts = [] }: { p
             />
           </div>
           <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
-          <p className="text-gray-600">${product.price}</p>
-          <button onClick={() => addToCart(product.id)}>Add to Cart</button>
+          <p className="text-gray-400">${product.price}</p>
+          {productIsInCart(product.id)
+            ? (
+              <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
+              onClick={(e) => {
+                e.preventDefault();
+                removeFromCart(product.id);
+              }}>Remove from Cart</button>
+            ) : (
+              <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full"
+              onClick={(e) => {
+                e.preventDefault();
+                addToCart(product.id);
+              }}>Add to Cart</button>
+            )}
         </Link>
       ))}
     </div>
