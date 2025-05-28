@@ -11,7 +11,6 @@ export async function connectToDb() {
   const MONGODB_USER = '';
   const MONGODB_PASSWORD = '';
   const uri = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@cluster0.af7ycek.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-
   //const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.vqdwh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
   const client = new MongoClient(uri, {

@@ -1,8 +1,10 @@
 import NotFoundPage from "@/app/not-found";
-import { products } from "@/app/product-data";
 
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const product = products.find(p => p.id === params.id);
+export default async function ProductDetailPage({ params }: { params: { id: string } }) {
+  // Use absolute URL for server-side fetch
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const response = await fetch(`${baseUrl}/api/products/${params.id}`);
+  const product = await response.json();
 
   if (!product) {
     return <NotFoundPage/>
