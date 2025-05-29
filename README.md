@@ -129,7 +129,7 @@ public/               # Static assets (images, icons)
   ```json
   { "productId": "<product ID>" }
   ```
-
+  <br/><br/>
 
 
 Developed with 🧡 by **Pedro Reis**  
