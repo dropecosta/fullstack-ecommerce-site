@@ -8,10 +8,12 @@ export async function connectToDb() {
     return { client: cachedClient, db: cachedDb };
   }
 
-  const MONGODB_USER = '';
-  const MONGODB_PASSWORD = '';
-  const uri = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@cluster0.af7ycek.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-  //const uri = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.vqdwh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+  const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_URI, MONGODB_DB } = process.env;
+  if (!MONGODB_URI && (!MONGODB_USER || !MONGODB_PASSWORD)) {
+    throw new Error('Please define MONGODB_URI or both MONGODB_USER and MONGODB_PASSWORD in .env.local');
+  }
+  const uri = MONGODB_URI ?? `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@cluster0.af7ycek.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+  const dbName = MONGODB_DB ?? 'ecommerce-nextjs';
 
   const client = new MongoClient(uri, {
     serverApi: {
@@ -24,7 +26,7 @@ export async function connectToDb() {
   await client.connect();
 
   cachedClient = client;
-  cachedDb = client.db('ecommenrce-nextjs');
+  cachedDb = client.db(dbName);
 
-  return { client, db: client.db('ecommenrce-nextjs') }
+  return { client, db: client.db(dbName) };
 }

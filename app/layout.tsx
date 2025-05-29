@@ -27,6 +27,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+        suppressHydrationWarning
+        cz-shortcut-listen=""
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NavBar />

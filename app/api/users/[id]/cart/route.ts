@@ -6,18 +6,23 @@ type Params = {
 }
 
 export async function GET(request: NextRequest, { params }: { params: Params }) {
-  const { db } = await connectToDb();
+  const { client, db } = await connectToDb();
   const userId = params.id;
-  // Fetch the user's cart by custom product IDs
   const cartDoc = await db.collection('carts').findOne({ userId });
   if (!cartDoc?.cartIds?.length) {
     return new Response(JSON.stringify([]), { status: 200, headers: { 'Content-Type': 'application/json' } });
   }
-  // Fetch products by custom 'id' field
-  const cartProducts = await db
+  let cartProducts = await db
     .collection('products')
     .find({ id: { $in: cartDoc.cartIds } })
     .toArray();
+  if (cartProducts.length === 0) {
+    const legacyDb = client.db('ecommenrce-nextjs');
+    cartProducts = await legacyDb
+      .collection('products')
+      .find({ id: { $in: cartDoc.cartIds } })
+      .toArray();
+  }
   return new Response(JSON.stringify(cartProducts), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
 
@@ -26,24 +31,28 @@ type CartBody = {
 }
 
 export async function POST(request: NextRequest, { params }: { params: Params }) {
-  const { db } = await connectToDb();
+  const { client, db } = await connectToDb();
   const userId = params.id;
   const { productId } = await request.json();
   try {
-    // Add the product ID string to cartIds
     await db.collection('carts').updateOne(
       { userId },
       { $addToSet: { cartIds: productId } },
       { upsert: true }
     );
-    // Fetch updated cart document
     const updatedCart = await db.collection('carts').findOne({ userId });
     const cartIds = updatedCart?.cartIds || [];
-    // Fetch product documents
-    const cartProducts = await db
+    let cartProducts = await db
       .collection('products')
       .find({ id: { $in: cartIds } })
       .toArray();
+    if (cartProducts.length === 0) {
+      const legacyDb = client.db('ecommenrce-nextjs');
+      cartProducts = await legacyDb
+        .collection('products')
+        .find({ id: { $in: cartIds } })
+        .toArray();
+    }
     return new Response(JSON.stringify(cartProducts), { status: 201, headers: { 'Content-Type': 'application/json' } });
   } catch (err) {
     console.error('POST /cart error', err);
@@ -52,26 +61,30 @@ export async function POST(request: NextRequest, { params }: { params: Params })
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: Params }) {
-  const { db } = await connectToDb();
+  const { client, db } = await connectToDb();
   const userId = params.id;
   const { productId } = await request.json();
   try {
-    // Remove the product ID string from cartIds
     await db.collection('carts').updateOne(
       { userId },
       { $pull: { cartIds: productId } }
     );
-    // Fetch updated cart document
     const updatedCart = await db.collection('carts').findOne({ userId });
     const cartIds = updatedCart?.cartIds || [];
-    const cartProducts = await db
+    let cartProducts = await db
       .collection('products')
       .find({ id: { $in: cartIds } })
       .toArray();
+    if (cartProducts.length === 0) {
+      const legacyDb = client.db('ecommenrce-nextjs');
+      cartProducts = await legacyDb
+        .collection('products')
+        .find({ id: { $in: cartIds } })
+        .toArray();
+    }
     return new Response(JSON.stringify(cartProducts), { status: 200, headers: { 'Content-Type': 'application/json' } });
   } catch (err) {
     console.error('DELETE /cart error', err);
     return new Response('Internal Server Error', { status: 500 });
   }
 }
-// End of file
