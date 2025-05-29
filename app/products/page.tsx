@@ -1,7 +1,7 @@
 import ProductsList from "../ProductsList";
 
 export default async function ProductsPage() {
-  // Fetch products from internal API
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
   const response = await fetch(`${baseUrl}/api/products`, { cache: 'no-cache' });
   const products = response.ok ? await response.json() : [];
