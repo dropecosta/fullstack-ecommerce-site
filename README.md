@@ -4,6 +4,13 @@
 
 ---
 
+![Products](https://github.com/user-attachments/assets/29578f18-31a6-471a-a006-45b7dfc9e800)
+
+![Product Detail](https://github.com/user-attachments/assets/210d69bf-2d77-44eb-834b-15ed408d86be)
+
+![Cart](https://github.com/user-attachments/assets/14be8ce4-ca5e-42a3-8a9d-5e8c852ac04a)
+
+
 ## Table of Contents
 
 - [About](#about)
@@ -49,8 +56,8 @@ This project is an ecommerce application built with **Next.js 13** (App Router),
 
 1. Clone the repository:
    ```powershell
-   git clone https://github.com/your-username/your-repo.git
-   cd your-repo
+   git clone https://github.com/dropecosta/fullstack-ecommerce-site/)](https://github.com/dropecosta/fullstack-ecommerce-site/
+   cd ecommerce
    ```
 2. Install dependencies:
    ```powershell
@@ -62,9 +69,9 @@ This project is an ecommerce application built with **Next.js 13** (App Router),
 Copy `.env.local.example` to `.env.local` and set the following variables:
 
 ```dotenv
-MONGODB_USER=<Your MongoDB user>
-MONGODB_PASSWORD=<Your MongoDB password>
-MONGODB_URI=<Your full connection string or cluster URL>
+MONGODB_USER=<MongoDB user>
+MONGODB_PASSWORD=<MongoDB password>
+MONGODB_URI=<Full connection string or cluster URL>
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
 
@@ -129,8 +136,7 @@ public/               # Static assets (images, icons)
   ```json
   { "productId": "<product ID>" }
   ```
+  <br/><br/>
 
 
-Developed with 🧡 by **Pedro Reis**  
-📧 dropecosta@gmail.com  
-[LinkedIn](https://www.linkedin.com/in/dropecosta/) | [GitHub](https://github.com/dropecosta)
+Developed with 🧡 by **Pedro Reis**  | 📧 dropecosta@gmail.com  | [LinkedIn](https://www.linkedin.com/in/dropecosta/) | [GitHub](https://github.com/dropecosta)
