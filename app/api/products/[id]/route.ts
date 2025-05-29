@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { connectToDb } from '../../../db';
-import { ObjectId } from 'mongodb';
+import { ObjectId, UpdateFilter, Document } from 'mongodb';
 
 type Params = {
   id: string;
@@ -43,10 +43,11 @@ export async function DELETE(request: NextRequest, { params }: { params: Params 
   if (result.deletedCount === 0) {
     return new Response('Product not found', { status: 404 });
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // Cascade delete: remove this product ID from all carts
+  const pullFilter = { $pull: { cartIds: params.id } };
   await db.collection('carts').updateMany(
     {},
-    { $pull: { cartIds: params.id } } as any
+    pullFilter as unknown as UpdateFilter<Document>
   );
   return new Response(null, { status: 204 });
 }
