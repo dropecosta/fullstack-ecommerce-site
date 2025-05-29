@@ -49,7 +49,7 @@ This project is an ecommerce application built with **Next.js 13** (App Router),
 
 1. Clone the repository:
    ```powershell
-   git clone https://github.com/your-username/your-repo.git](https://github.com/dropecosta/fullstack-ecommerce-site/)](https://github.com/dropecosta/fullstack-ecommerce-site/)
+   git clone https://github.com/dropecosta/fullstack-ecommerce-site/)](https://github.com/dropecosta/fullstack-ecommerce-site/
    cd ecommerce
    ```
 2. Install dependencies:
