@@ -26,10 +26,6 @@ export async function GET(request: NextRequest, { params }: { params: Params }) 
   return new Response(JSON.stringify(cartProducts), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
 
-type CartBody = {
-  productId: string;
-}
-
 export async function POST(request: NextRequest, { params }: { params: Params }) {
   const { client, db } = await connectToDb();
   const userId = params.id;

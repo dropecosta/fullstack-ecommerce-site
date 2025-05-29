@@ -26,15 +26,12 @@ export async function GET(request: NextRequest, { params }: { params: Params }) 
   })
 }
 
-// DELETE product by MongoDB _id
 export async function DELETE(request: NextRequest, { params }: { params: Params }) {
   const { db } = await connectToDb();
   let objectId;
-  // Try URL param first
   try {
     objectId = new ObjectId(params.id);
   } catch {
-    // Fallback: parse JSON body for _id
     try {
       const body = await request.json();
       objectId = new ObjectId(body._id || body.id);
@@ -46,10 +43,9 @@ export async function DELETE(request: NextRequest, { params }: { params: Params 
   if (result.deletedCount === 0) {
     return new Response('Product not found', { status: 404 });
   }
-  // Cascade delete: remove this product ID from all carts
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await db.collection('carts').updateMany(
     {},
-    // cast to any to satisfy TS types
     { $pull: { cartIds: params.id } } as any
   );
   return new Response(null, { status: 204 });
