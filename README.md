@@ -132,6 +132,4 @@ public/               # Static assets (images, icons)
   <br/><br/>
 
 
-Developed with 🧡 by **Pedro Reis**  
-📧 dropecosta@gmail.com  
-[LinkedIn](https://www.linkedin.com/in/dropecosta/) | [GitHub](https://github.com/dropecosta)
+Developed with 🧡 by **Pedro Reis**  | 📧 dropecosta@gmail.com  | [LinkedIn](https://www.linkedin.com/in/dropecosta/) | [GitHub](https://github.com/dropecosta)
