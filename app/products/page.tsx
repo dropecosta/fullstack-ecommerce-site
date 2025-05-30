@@ -1,36 +1,28 @@
 import ProductsList from "../ProductsList";
-import { Product } from '../product-data';
-import { notFound } from 'next/navigation';
+import { connectToDb } from '../db';
+import type { Product } from '../product-data';
 
 // Force dynamic rendering at runtime
 export const dynamic = 'force-dynamic';
 
 export default async function ProductsPage() {
-  // Derive origin for server-side calls
-  const origin = process.env.NEXT_PUBLIC_BASE_URL
-    ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-  let products: Product[];
-  try {
-    const res = await fetch(`${origin}/api/products`, { cache: 'no-store' });
-    if (res.status === 404) {
-      notFound();
-    }
-    if (!res.ok) {
-      throw new Error(`Failed to fetch products: ${res.status}`);
-    }
-    products = await res.json();
-  } catch (err) {
-    console.error('ProductsPage fetch error:', err);
-    return <div className="text-red-500">Error loading products.</div>;
+  const { db, client } = await connectToDb();
+  // Fetch raw product docs
+  let rawProducts: any[] = await db.collection('products').find({}).toArray();
+  // Fallback to legacy DB if none found
+  if (!rawProducts.length) {
+    rawProducts = await client.db('ecommenrce-nextjs').collection('products').find({}).toArray();
   }
-  let cartProducts: Product[] = [];
-  try {
-    const res2 = await fetch(`${origin}/api/users/2/cart`, { cache: 'no-store' });
-    if (!res2.ok) throw new Error(`Cart fetch failed: ${res2.status}`);
-    cartProducts = await res2.json();
-  } catch (err) {
-    console.error('ProductsPage cart fetch error:', err);
+  // Map to plain objects, stripping _id
+  const products: Product[] = rawProducts.map(({ id, imageUrl, name, description, price }) => ({ id, imageUrl, name, description, price }));
+  // Fetch raw cart items
+  const cartDoc = await db.collection('carts').findOne({ userId: '2' });
+  let rawCart: any[] = [];
+  if (cartDoc?.cartIds?.length) {
+    rawCart = await db.collection('products').find({ id: { $in: cartDoc.cartIds } }).toArray();
   }
+  // Map cart products to plain format
+  const cartProducts: Product[] = rawCart.map(({ id, imageUrl, name, description, price }) => ({ id, imageUrl, name, description, price }));
 
   return (
     <div className="container mx-auto p-8"> 
