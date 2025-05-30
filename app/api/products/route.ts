@@ -1,5 +1,8 @@
 import { connectToDb } from "../../db";
 
+// Disable prerendering and force dynamic
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const { client, db } = await connectToDb();
   let products = await db.collection('products').find({}).toArray();

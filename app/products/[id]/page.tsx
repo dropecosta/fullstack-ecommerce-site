@@ -1,9 +1,12 @@
 import NotFoundPage from "@/app/not-found";
 
+// Force runtime data fetching
+export const dynamic = 'force-dynamic';
+
 export default async function ProductDetailPage({ params }: { params: { id: string } }) {
-  // Use absolute URL for server-side fetch
+  // Use full base URL for server-side API call
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-  const response = await fetch(`${baseUrl}/api/products/${params.id}`);
+  const response = await fetch(`${baseUrl}/api/products/${params.id}`, { cache: 'no-store' });
   const product = await response.json();
 
   if (!product) {
