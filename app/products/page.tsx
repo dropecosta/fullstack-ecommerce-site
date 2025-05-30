@@ -5,8 +5,14 @@ import { Product } from '../product-data';
 export const dynamic = 'force-dynamic';
 
 export default async function ProductsPage() {
-  // Use base URL for server-side fetch
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  // Resolve base URL dynamically: local development, env var, or Vercel URL
+  const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+  const host = process.env.NEXT_PUBLIC_BASE_URL
+    ? process.env.NEXT_PUBLIC_BASE_URL.replace(/https?:\/\//, '')
+    : process.env.VERCEL_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+    ?? (host ? `${protocol}://${host}` : 'http://localhost:3000');
+
   // Fetch products list
   const resProducts = await fetch(`${baseUrl}/api/products`, { cache: 'no-store' });
   const products: Product[] = resProducts.ok ? await resProducts.json() : [];
