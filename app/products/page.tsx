@@ -7,12 +7,14 @@ export const dynamic = 'force-dynamic';
 
 export default async function ProductsPage() {
   const { db, client } = await connectToDb();
-  // Fetch raw product docs
+  // Fetch raw product docs from primary DB
   let rawProducts = await db.collection<Product>('products').find({}).toArray();
-  // Fallback to legacy DB if none found
+  // If none found, attempt fallbacks (correct then legacy misspelled)
   if (!rawProducts.length) {
-    // Fallback to legacy DB
-    rawProducts = await client.db('ecommerce-nextjs').collection<Product>('products').find({}).toArray();
+    for (const fallbackDb of ['ecommerce-nextjs', 'ecommenrce-nextjs']) {
+      rawProducts = await client.db(fallbackDb).collection<Product>('products').find({}).toArray();
+      if (rawProducts.length) break;
+    }
   }
   // Map to plain objects, stripping _id
   const products: Product[] = rawProducts.map(({ id, imageUrl, name, description, price }) => ({ id, imageUrl, name, description, price }));
