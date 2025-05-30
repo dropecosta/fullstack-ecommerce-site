@@ -1,6 +1,7 @@
 import NotFoundPage from "@/app/not-found";
 import { connectToDb } from "../../db";
 import type { Product } from '../../product-data';
+import Image from 'next/image';
 
 // Force runtime data fetching
 export const dynamic = 'force-dynamic';
@@ -16,11 +17,13 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
 
   return (
     <div className="container mx-auto p-8 flex flex-col md:flex-row">
-      <div className="md:w-1/2 mb-4 md:mb-0 md:mr-8">
-        <img
+      <div className="md:w-1/2 mb-4 md:mb-0 md:mr-8 relative h-64 md:h-auto">
+        <Image
           src={'/' + product.imageUrl}
           alt="Product image"
-          className="w-full h-auto rounded-lg shadow-md" />
+          fill
+          className="rounded-lg shadow-md object-cover"
+        />
       </div>
       <div className="md:w-1/2">
         <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
