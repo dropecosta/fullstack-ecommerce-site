@@ -1,19 +1,18 @@
 import ProductsList from "../ProductsList";
-import { connectToDb } from "../db";
-import type { Product } from '../product-data';
+import { Product } from '../product-data';
 
-// Force runtime data fetching
+// Force dynamic rendering at runtime
 export const dynamic = 'force-dynamic';
 
 export default async function ProductsPage() {
-  // Fetch data directly from DB with proper typing
-  const { db } = await connectToDb();
-  const products: Product[] = await db.collection<Product>('products').find({}).toArray();
-  let cartProducts: Product[] = [];
-  const cartDoc = await db.collection('carts').findOne({ userId: '2' });
-  if (cartDoc?.cartIds?.length) {
-    cartProducts = await db.collection<Product>('products').find({ id: { $in: cartDoc.cartIds } }).toArray();
-  }
+  // Use base URL for server-side fetch
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  // Fetch products list
+  const resProducts = await fetch(`${baseUrl}/api/products`, { cache: 'no-store' });
+  const products: Product[] = resProducts.ok ? await resProducts.json() : [];
+  // Fetch current cart items
+  const resCart = await fetch(`${baseUrl}/api/users/2/cart`, { cache: 'no-store' });
+  const cartProducts: Product[] = resCart.ok ? await resCart.json() : [];
 
   return (
     <div className="container mx-auto p-8"> 
