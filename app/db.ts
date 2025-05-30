@@ -15,13 +15,18 @@ export async function connectToDb() {
   const uri = MONGODB_URI ?? `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@cluster0.af7ycek.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
   const dbName = MONGODB_DB ?? 'ecommerce-nextjs';
 
-  const client = new MongoClient(uri, {
+  // Configure MongoClient with TLS options to avoid SSL errors in production
+  const clientOptions = {
     serverApi: {
       version: ServerApiVersion.v1,
       strict: true,
       deprecationErrors: true,
-    }
-  });
+    },
+    // In serverless or certain production environments, allow invalid TLS certificates
+    tlsAllowInvalidCertificates: true,
+    tlsAllowInvalidHostnames: true,
+  };
+  const client = new MongoClient(uri, clientOptions);
 
   await client.connect();
 
