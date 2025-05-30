@@ -1,16 +1,17 @@
 import NotFoundPage from "@/app/not-found";
+import { connectToDb } from "../../db";
+import type { Product } from '../../product-data';
 
 // Force runtime data fetching
 export const dynamic = 'force-dynamic';
 
 export default async function ProductDetailPage({ params }: { params: { id: string } }) {
-  // Use full base URL for server-side API call
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-  const response = await fetch(`${baseUrl}/api/products/${params.id}`, { cache: 'no-store' });
-  const product = await response.json();
+  // Fetch product directly from DB
+  const { db } = await connectToDb();
+  const product = await db.collection<Product>('products').findOne({ id: params.id });
 
   if (!product) {
-    return <NotFoundPage/>
+    return <NotFoundPage/>;
   }
 
   return (
